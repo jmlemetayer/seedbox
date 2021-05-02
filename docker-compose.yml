@@ -26,5 +26,23 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "traefik:/letsencrypt"
 
+  downloads:
+    image: "jmlemetayer/abba"
+    restart: "unless-stopped"
+    expose:
+      - "80"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "${MEDIA_DIR}:/var/www"
+    environment:
+      THEME: "litera"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.downloads.rule=Host(`${DOWNLOADS_FQDN}`)"
+      - "traefik.http.routers.downloads.entrypoints=websecure"
+      - "traefik.http.routers.downloads.tls=true"
+      - "traefik.http.routers.downloads.tls.certresolver=letsencrypt"
+
 volumes:
   traefik:
