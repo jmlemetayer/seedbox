@@ -5,6 +5,8 @@ services:
   traefik:
     image: "traefik:2.4"
     restart: "unless-stopped"
+    depends_on:
+      - "authelia"
     command:
       - "--log.level=INFO"
       - "--providers.docker=true"
@@ -26,6 +28,40 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "traefik:/letsencrypt"
 
+  authelia:
+    image: "authelia/authelia:4.29"
+    restart: "unless-stopped"
+    command: [ "authelia", "--config", "/configro/configuration.yml" ]
+    expose:
+      - "9091"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "./authelia:/configro:ro"
+      - "authelia:/config"
+    secrets:
+      - "authelia_authentication_backend_ldap_password"
+      - "authelia_jwt_secret"
+      - "authelia_notifier_smtp_password"
+      - "authelia_session_secret"
+    environment:
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: "/run/secrets/authelia_authentication_backend_ldap_password"
+      AUTHELIA_JWT_SECRET_FILE: "/run/secrets/authelia_jwt_secret"
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: "/run/secrets/authelia_notifier_smtp_password"
+      AUTHELIA_SESSION_SECRET_FILE: "/run/secrets/authelia_session_secret"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.authelia.rule=Host(`${AUTHELIA_FQDN}`)"
+      - "traefik.http.routers.authelia.entrypoints=websecure"
+      - "traefik.http.routers.authelia.tls=true"
+      - "traefik.http.routers.authelia.tls.certresolver=letsencrypt"
+      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://${AUTHELIA_FQDN}/"
+      - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email"
+      - "traefik.http.middlewares.authelia-basic.forwardauth.address=http://authelia:9091/api/verify?auth=basic"
+      - "traefik.http.middlewares.authelia-basic.forwardauth.trustForwardHeader=true"
+      - "traefik.http.middlewares.authelia-basic.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email"
+
   downloads:
     image: "jmlemetayer/abba"
     restart: "unless-stopped"
@@ -43,6 +79,18 @@ services:
       - "traefik.http.routers.downloads.entrypoints=websecure"
       - "traefik.http.routers.downloads.tls=true"
       - "traefik.http.routers.downloads.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.downloads.middlewares=authelia-basic@docker"
 
 volumes:
+  authelia:
   traefik:
+
+secrets:
+  authelia_authentication_backend_ldap_password:
+    file: "./secrets/authelia_authentication_backend_ldap_password"
+  authelia_jwt_secret:
+    file: "./secrets/authelia_jwt_secret"
+  authelia_notifier_smtp_password:
+    file: "./secrets/authelia_notifier_smtp_password"
+  authelia_session_secret:
+    file: "./secrets/authelia_session_secret"

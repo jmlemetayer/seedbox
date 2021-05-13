@@ -1,0 +1,43 @@
+log_level: "info"
+
+authentication_backend:
+  disable_reset_password: true
+  refresh_interval: "5m"
+  ldap:
+    url: "ldaps://ldap.example.com"
+
+    base_dn: "dc=ldap,dc=example,dc=com"
+    user: "uid=root,cn=users,dc=ldap,dc=example,dc=com"
+
+    additional_users_dn: "cn=users"
+    username_attribute: "uid"
+    mail_attribute: "mail"
+    users_filter: "(&({username_attribute}={input})(objectClass=person))"
+
+    additional_groups_dn: "cn=groups"
+    group_name_attribute: "cn"
+    groups_filter: "(&(member={dn})(objectclass=posixGroup))"
+
+access_control:
+  default_policy: "deny"
+  rules:
+    - domain: "*.example.com"
+      subject: "group:administrators"
+      policy: "one_factor"
+
+notifier:
+  smtp:
+    username: "postmaster@example.com"
+    sender: "noreply@example.com"
+    host: "smtp.example.com"
+    port: 587
+
+session:
+  name: "authelia_session"
+  expiration: "1h"
+  inactivity: "5m"
+  domain: "example.com"
+
+storage:
+  local:
+    path: "/config/db.sqlite3"

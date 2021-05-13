@@ -1,1 +1,3 @@
 /.env
+/authelia/configuration.yml
+/secrets/
