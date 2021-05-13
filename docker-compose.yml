@@ -62,6 +62,26 @@ services:
       - "traefik.http.middlewares.authelia-basic.forwardauth.trustForwardHeader=true"
       - "traefik.http.middlewares.authelia-basic.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email"
 
+  home:
+    build: "./home"
+    restart: "unless-stopped"
+    expose:
+      - "80"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+    environment:
+      HOME_FQDN: "${HOME_FQDN}"
+      HOME_LINKS: "downloads"
+      HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
+      - "traefik.http.routers.home.entrypoints=websecure"
+      - "traefik.http.routers.home.tls=true"
+      - "traefik.http.routers.home.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.home.middlewares=authelia@docker"
+
   downloads:
     image: "jmlemetayer/abba"
     restart: "unless-stopped"
