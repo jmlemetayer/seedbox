@@ -1,0 +1,18 @@
+{
+    "blocklist-enabled": true,
+    "blocklist-url": "http://john.bitsurge.net/public/biglist.p2p.gz",
+    "dht-enabled": false,
+    "download-dir": "/downloads/Downloaded",
+    "encryption": 2,
+    "incomplete-dir": "/downloads/.Downloading",
+    "incomplete-dir-enabled": true,
+    "message-level": 1,
+    "peer-port": 50500,
+    "pex-enabled": false,
+    "port-forwarding-enabled": false,
+    "rename-partial-files": true,
+    "rpc-host-whitelist-enabled": false,
+    "rpc-whitelist-enabled": false,
+    "utp-enabled": false,
+    "watch-dir-enabled": false
+}

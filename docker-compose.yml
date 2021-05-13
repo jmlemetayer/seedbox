@@ -72,8 +72,9 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "downloads"
+      HOME_LINKS: "downloads:transmission"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
+      HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
@@ -101,9 +102,37 @@ services:
       - "traefik.http.routers.downloads.tls.certresolver=letsencrypt"
       - "traefik.http.routers.downloads.middlewares=authelia-basic@docker"
 
+  transmission:
+    image: "linuxserver/transmission"
+    restart: "unless-stopped"
+    expose:
+      - "9091"
+    ports:
+      - "50500:50500"
+      - "50500:50500/udp"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "./transmission/init:/etc/cont-init.d/21-config:ro"
+      - "./transmission/settings.json:/defaults/settings.json:ro"
+      - "${MEDIA_DIR}:/downloads"
+      - "transmission:/config"
+      - "/tmp/transmission:/watch"
+    environment:
+      PUID: "${MEDIA_UID}"
+      PGID: "${MEDIA_GID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_FQDN}`)"
+      - "traefik.http.routers.transmission.entrypoints=websecure"
+      - "traefik.http.routers.transmission.tls=true"
+      - "traefik.http.routers.transmission.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.transmission.middlewares=authelia@docker"
+
 volumes:
   authelia:
   traefik:
+  transmission:
 
 secrets:
   authelia_authentication_backend_ldap_password:

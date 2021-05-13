@@ -1,0 +1,10 @@
+#!/usr/bin/with-contenv bash
+
+# remove unused folders
+rm -rf /downloads/{incomplete,complete}
+
+# make folder
+mkdir -p /downloads/{.Downloading,Downloaded}
+
+# permissions
+chown abc:abc /downloads/{.Downloading,Downloaded}

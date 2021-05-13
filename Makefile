@@ -13,7 +13,8 @@ down:
 clean: down
 	docker volume prune --force \
 		--filter label=com.docker.compose.project=seedbox \
-		--filter label!=com.docker.compose.volume=traefik
+		--filter label!=com.docker.compose.volume=traefik \
+		--filter label!=com.docker.compose.volume=transmission
 
 .PHONY: mrproper
 mrproper: down
