@@ -71,9 +71,10 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "downloads:transmission"
+      HOME_LINKS: "downloads:transmission:jackett"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
       HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
+      HOME_LINK_JACKETT: "https://${JACKETT_FQDN}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
@@ -136,8 +137,29 @@ services:
     environment:
       LOG_LEVEL: "info"
 
+  jackett:
+    image: "linuxserver/jackett"
+    restart: "unless-stopped"
+    expose:
+      - "9117"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "jackett:/config"
+    environment:
+      PUID: "${MEDIA_UID}"
+      PGID: "${MEDIA_GID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.jackett.rule=Host(`${JACKETT_FQDN}`)"
+      - "traefik.http.routers.jackett.entrypoints=websecure"
+      - "traefik.http.routers.jackett.tls=true"
+      - "traefik.http.routers.jackett.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.jackett.middlewares=authelia@docker"
+
 volumes:
   authelia:
+  jackett:
   traefik:
   transmission:
 
