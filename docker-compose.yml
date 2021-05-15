@@ -71,8 +71,9 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "radarr:downloads:transmission:jackett"
+      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett"
       HOME_LINK_RADARR: "https://${RADARR_FQDN}"
+      HOME_LINK_SONARR: "https://${SONARR_FQDN}"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
       HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
       HOME_LINK_JACKETT: "https://${JACKETT_FQDN}"
@@ -179,10 +180,32 @@ services:
       - "traefik.http.routers.radarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.radarr.middlewares=authelia@docker"
 
+  sonarr:
+    image: "linuxserver/sonarr"
+    restart: "unless-stopped"
+    expose:
+      - "8989"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "${MEDIA_DIR}:/downloads"
+      - "sonarr:/config"
+    environment:
+      PUID: "${MEDIA_UID}"
+      PGID: "${MEDIA_GID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sonarr.rule=Host(`${SONARR_FQDN}`)"
+      - "traefik.http.routers.sonarr.entrypoints=websecure"
+      - "traefik.http.routers.sonarr.tls=true"
+      - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.sonarr.middlewares=authelia@docker"
+
 volumes:
   authelia:
   jackett:
   radarr:
+  sonarr:
   traefik:
   transmission:
 
