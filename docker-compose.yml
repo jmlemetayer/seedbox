@@ -115,7 +115,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "./transmission/init:/etc/cont-init.d/21-config:ro"
+      - "./transmission/init:/etc/cont-init.d/31-config:ro"
       - "./transmission/settings.json:/defaults/settings.json:ro"
       - "${MEDIA_DIR}:/downloads"
       - "transmission:/config"
@@ -167,6 +167,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+      - "./radarr/init:/etc/cont-init.d/31-config:ro"
       - "${MEDIA_DIR}:/downloads"
       - "radarr:/config"
     environment:
@@ -188,6 +189,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+      - "./sonarr/init:/etc/cont-init.d/31-config:ro"
       - "${MEDIA_DIR}:/downloads"
       - "sonarr:/config"
     environment:

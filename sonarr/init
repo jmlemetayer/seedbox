@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+# make folder
+mkdir -p /downloads/TV\ Shows
+
+# permissions
+chown abc:abc /downloads/TV\ Shows

@@ -1,0 +1,7 @@
+#!/usr/bin/with-contenv bash
+
+# make folder
+mkdir -p /downloads/Movies
+
+# permissions
+chown abc:abc /downloads/Movies
