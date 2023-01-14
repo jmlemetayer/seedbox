@@ -13,9 +13,11 @@ cat > ${INDEX_HTML} <<-EOF
 		<link href="https://bootswatch.com/5/vapor/bootstrap.min.css" rel="stylesheet">
 		<title>${HOME_FQDN}</title>
 	</head>
-	<body>
-		<nav class="navbar navbar-expand-md navbar-dark bg-primary">
-			<a class="navbar-brand" href="#">${HOME_FQDN}</a>
+	<body class="vh-100">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="#">${HOME_FQDN}</a>
+			</div>
 		</nav>
 		<main role="main" class="container mt-5">
 			<div class="list-group">
