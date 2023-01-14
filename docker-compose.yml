@@ -115,7 +115,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "./transmission/init:/etc/cont-init.d/31-config:ro"
+      - "./transmission/init:/custom-cont-init.d/01-init:ro"
       - "./transmission/settings.json:/defaults/settings.json:ro"
       - "${MEDIA_DIR}:/downloads"
       - "transmission:/config"

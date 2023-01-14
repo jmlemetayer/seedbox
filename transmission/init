@@ -7,4 +7,4 @@ rm -rf /downloads/{incomplete,complete}
 mkdir -p /downloads/{.Downloading,Downloaded}
 
 # permissions
-chown abc:abc /downloads/{.Downloading,Downloaded}
+chown ${PUID}:${PGID} /downloads/{.Downloading,Downloaded}
