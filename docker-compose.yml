@@ -71,13 +71,12 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett:cupidon"
+      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett"
       HOME_LINK_RADARR: "https://${RADARR_FQDN}"
       HOME_LINK_SONARR: "https://${SONARR_FQDN}"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
       HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
       HOME_LINK_JACKETT: "https://${JACKETT_FQDN}"
-      HOME_LINK_CUPIDON: "https://${CUPIDON_FQDN}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
@@ -204,41 +203,8 @@ services:
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.sonarr.middlewares=authelia@docker"
 
-  cupidon:
-    image: "jmlemetayer/cupidon"
-    restart: "unless-stopped"
-    expose:
-      - "8080"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
-      - "${MEDIA_DIR}:/data"
-      - "cupidon:/config"
-    environment:
-      CONFIG_DIR: "/config"
-      CUPIDON_GID: "${MEDIA_GID}"
-      CUPIDON_UID: "${MEDIA_UID}"
-      CUPIDON_URL: "https://${CUPIDON_FQDN}"
-      DATA_DIR: "/data"
-      DATA_FILES_DIR: "/data/Downloaded"
-      DATA_MOVIES_DIR: "/data/Movies"
-      DATA_TV_SHOWS_DIR: "/data/TV Shows"
-      RADARR_DATA_DIR: "/downloads"
-      RADARR_URL: "http://radarr:7878"
-      SEEDBOX_URL: "https://${DOWNLOADS_FQDN}"
-      SONARR_DATA_DIR: "/downloads"
-      SONARR_URL: "http://sonarr:8989"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.cupidon.rule=Host(`${CUPIDON_FQDN}`)"
-      - "traefik.http.routers.cupidon.entrypoints=websecure"
-      - "traefik.http.routers.cupidon.tls=true"
-      - "traefik.http.routers.cupidon.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.cupidon.middlewares=authelia@docker"
-
 volumes:
   authelia:
-  cupidon:
   jackett:
   radarr:
   sonarr:
