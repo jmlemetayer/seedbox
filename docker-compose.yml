@@ -167,7 +167,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "./radarr/init:/etc/cont-init.d/31-config:ro"
+      - "./radarr/init:/custom-cont-init.d/01-init:ro"
       - "${MEDIA_DIR}:/downloads"
       - "radarr:/config"
     environment:
@@ -189,7 +189,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "./sonarr/init:/etc/cont-init.d/31-config:ro"
+      - "./sonarr/init:/custom-cont-init.d/01-init:ro"
       - "${MEDIA_DIR}:/downloads"
       - "sonarr:/config"
     environment:

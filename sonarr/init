@@ -4,4 +4,4 @@
 mkdir -p /downloads/TV\ Shows
 
 # permissions
-chown abc:abc /downloads/TV\ Shows
+chown ${PUID}:${PGID} /downloads/TV\ Shows
