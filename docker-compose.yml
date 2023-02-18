@@ -71,12 +71,13 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett"
+      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett:resilio"
       HOME_LINK_RADARR: "https://${RADARR_FQDN}"
       HOME_LINK_SONARR: "https://${SONARR_FQDN}"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
       HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
       HOME_LINK_JACKETT: "https://${JACKETT_FQDN}"
+      HOME_LINK_RESILIO: "https://${RESILIO_FQDN}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
@@ -203,10 +204,35 @@ services:
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.sonarr.middlewares=authelia@docker"
 
+  resilio:
+    image: "linuxserver/resilio-sync"
+    restart: "unless-stopped"
+    expose:
+      - "8888"
+    ports:
+      - "55555:55555"
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - "${MEDIA_DIR}:/downloads"
+      - "${MEDIA_DIR}:/sync"
+      - "resilio:/config"
+    environment:
+      PUID: "${MEDIA_UID}"
+      PGID: "${MEDIA_GID}"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.resilio.rule=Host(`${RESILIO_FQDN}`)"
+      - "traefik.http.routers.resilio.entrypoints=websecure"
+      - "traefik.http.routers.resilio.tls=true"
+      - "traefik.http.routers.resilio.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.resilio.middlewares=authelia@docker"
+
 volumes:
   authelia:
   jackett:
   radarr:
+  resilio:
   sonarr:
   traefik:
   transmission:
