@@ -10,7 +10,7 @@ cat > ${INDEX_HTML} <<-EOF
 	<head>
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link href="https://bootswatch.com/5/vapor/bootstrap.min.css" rel="stylesheet">
+		<link href="https://bootswatch.com/5/zephyr/bootstrap.min.css" rel="stylesheet">
 		<title>${HOME_FQDN}</title>
 	</head>
 	<body class="vh-100">

@@ -97,7 +97,7 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "${MEDIA_DIR}:/var/www"
     environment:
-      THEME: "vapor"
+      THEME: "zephyr"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.downloads.rule=Host(`${DOWNLOADS_FQDN}`)"
