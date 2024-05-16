@@ -1,10 +1,14 @@
+PROJECT := seedbox
+
+DOCKER_COMPOSE := docker compose -p ${PROJECT}
+
 .PHONY: install
 install:
-	docker-compose up --build --detach
+	${DOCKER_COMPOSE} up --build --detach
 
 .PHONY: uninstall
 uninstall:
-	docker-compose down --rmi all
+	${DOCKER_COMPOSE} down --rmi all
 
 .PHONY: reinstall
 reinstall:
@@ -13,4 +17,4 @@ reinstall:
 
 .PHONY: mrproper
 mrproper: uninstall
-	docker volume prune --force --filter=label=com.docker.compose.project=seedbox
+	docker volume prune --force --filter=label=com.docker.compose.project=${PROJECT}
