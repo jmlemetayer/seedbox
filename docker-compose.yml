@@ -95,7 +95,7 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "${MEDIA_DIR}:/var/www"
+      - "${SEEDBOX_DIR}:/var/www"
     environment:
       THEME: "zephyr"
     labels:
@@ -119,12 +119,12 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "./transmission/init:/custom-cont-init.d/01-init:ro"
       - "./transmission/settings.json:/defaults/settings.json:ro"
-      - "${MEDIA_DIR}:/downloads"
+      - "${SEEDBOX_DIR}:/downloads"
       - "transmission:/config"
       - "/tmp/transmission:/watch"
     environment:
-      PUID: "${MEDIA_UID}"
-      PGID: "${MEDIA_GID}"
+      PUID: "${SEEDBOX_UID}"
+      PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_FQDN}`)"
@@ -151,8 +151,8 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
       - "jackett:/config"
     environment:
-      PUID: "${MEDIA_UID}"
-      PGID: "${MEDIA_GID}"
+      PUID: "${SEEDBOX_UID}"
+      PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.jackett.rule=Host(`${JACKETT_FQDN}`)"
@@ -170,11 +170,11 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
       - "./radarr/init:/custom-cont-init.d/01-init:ro"
-      - "${MEDIA_DIR}:/downloads"
+      - "${SEEDBOX_DIR}:/downloads"
       - "radarr:/config"
     environment:
-      PUID: "${MEDIA_UID}"
-      PGID: "${MEDIA_GID}"
+      PUID: "${SEEDBOX_UID}"
+      PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.radarr.rule=Host(`${RADARR_FQDN}`)"
@@ -192,11 +192,11 @@ services:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
       - "./sonarr/init:/custom-cont-init.d/01-init:ro"
-      - "${MEDIA_DIR}:/downloads"
+      - "${SEEDBOX_DIR}:/downloads"
       - "sonarr:/config"
     environment:
-      PUID: "${MEDIA_UID}"
-      PGID: "${MEDIA_GID}"
+      PUID: "${SEEDBOX_UID}"
+      PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.sonarr.rule=Host(`${SONARR_FQDN}`)"
@@ -238,12 +238,12 @@ services:
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
-      - "${MEDIA_DIR}:/downloads"
-      - "${MEDIA_DIR}:/sync"
+      - "${SEEDBOX_DIR}:/downloads"
+      - "${SEEDBOX_DIR}:/sync"
       - "resilio:/config"
     environment:
-      PUID: "${MEDIA_UID}"
-      PGID: "${MEDIA_GID}"
+      PUID: "${SEEDBOX_UID}"
+      PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.resilio.rule=Host(`${RESILIO_FQDN}`)"
