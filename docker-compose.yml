@@ -26,7 +26,7 @@ services:
       - "traefik:/letsencrypt"
 
   authelia:
-    image: "authelia/authelia:4.29"
+    image: "authelia/authelia:4.38"
     restart: "unless-stopped"
     command: [ "authelia", "--config", "/configro/configuration.yml" ]
     expose:
@@ -37,15 +37,17 @@ services:
       - "./authelia:/configro:ro"
       - "authelia:/config"
     secrets:
-      - "authelia_authentication_backend_ldap_password"
+      - "authelia_ldap_password"
       - "authelia_jwt_secret"
-      - "authelia_notifier_smtp_password"
+      - "authelia_smtp_password"
       - "authelia_session_secret"
+      - "authelia_storage_encryption_key"
     environment:
-      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: "/run/secrets/authelia_authentication_backend_ldap_password"
-      AUTHELIA_JWT_SECRET_FILE: "/run/secrets/authelia_jwt_secret"
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: "/run/secrets/authelia_notifier_smtp_password"
+      AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE: "/run/secrets/authelia_ldap_password"
+      AUTHELIA_IDENTITY_VALIDATION_RESET_PASSWORD_JWT_SECRET_FILE: "/run/secrets/authelia_jwt_secret"
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE: "/run/secrets/authelia_smtp_password"
       AUTHELIA_SESSION_SECRET_FILE: "/run/secrets/authelia_session_secret"
+      AUTHELIA_STORAGE_ENCRYPTION_KEY_FILE: "/run/secrets/authelia_storage_encryption_key"
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.authelia.loadbalancer.server.port=9091"
@@ -53,12 +55,12 @@ services:
       - "traefik.http.routers.authelia.entrypoints=websecure"
       - "traefik.http.routers.authelia.tls=true"
       - "traefik.http.routers.authelia.tls.certresolver=letsencrypt"
-      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/verify?rd=https://${AUTHELIA_FQDN}/"
-      - "traefik.http.middlewares.authelia.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.authelia.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email"
+      - "traefik.http.middlewares.authelia.forwardauth.address=http://authelia:9091/api/authz/forward-auth"
+      - "traefik.http.middlewares.authelia.forwardauth.trustforwardheader=true"
+      - "traefik.http.middlewares.authelia.forwardauth.authresponseheaders=Remote-User,Remote-Groups,Remote-Email,Remote-Name"
       - "traefik.http.middlewares.authelia-basic.forwardauth.address=http://authelia:9091/api/verify?auth=basic"
-      - "traefik.http.middlewares.authelia-basic.forwardauth.trustForwardHeader=true"
-      - "traefik.http.middlewares.authelia-basic.forwardauth.authResponseHeaders=Remote-User, Remote-Groups, Remote-Name, Remote-Email"
+      - "traefik.http.middlewares.authelia-basic.forwardauth.trustforwardheader=true"
+      - "traefik.http.middlewares.authelia-basic.forwardauth.authresponseheaders=Remote-User,Remote-Groups,Remote-Email,Remote-Name"
 
   home:
     build: "./home"
@@ -244,11 +246,13 @@ volumes:
   transmission:
 
 secrets:
-  authelia_authentication_backend_ldap_password:
-    file: "./secrets/authelia_authentication_backend_ldap_password"
+  authelia_ldap_password:
+    file: "./secrets/authelia_ldap_password"
   authelia_jwt_secret:
     file: "./secrets/authelia_jwt_secret"
-  authelia_notifier_smtp_password:
-    file: "./secrets/authelia_notifier_smtp_password"
+  authelia_smtp_password:
+    file: "./secrets/authelia_smtp_password"
   authelia_session_secret:
     file: "./secrets/authelia_session_secret"
+  authelia_storage_encryption_key:
+    file: "./secrets/authelia_storage_encryption_key"

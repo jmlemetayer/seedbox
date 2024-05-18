@@ -1,21 +1,27 @@
-log_level: "info"
+log:
+  level: "info"
 
 authentication_backend:
-  disable_reset_password: true
   refresh_interval: "5m"
+
+  password_reset:
+    disable: true
+
   ldap:
-    url: "ldaps://ldap.example.com"
+    address: "ldaps://ldap.example.com"
 
     base_dn: "dc=ldap,dc=example,dc=com"
     user: "uid=root,cn=users,dc=ldap,dc=example,dc=com"
 
+    attributes:
+      mail: "mail"
+      username: "uid"
+      group_name: "cn"
+
     additional_users_dn: "cn=users"
-    username_attribute: "uid"
-    mail_attribute: "mail"
     users_filter: "(&({username_attribute}={input})(objectClass=person))"
 
     additional_groups_dn: "cn=groups"
-    group_name_attribute: "cn"
     groups_filter: "(&(member={dn})(objectclass=posixGroup))"
 
 access_control:
@@ -27,16 +33,17 @@ access_control:
 
 notifier:
   smtp:
+    address: "submission://ssl0.ovh.net:587"
     username: "postmaster@example.com"
     sender: "noreply@example.com"
-    host: "smtp.example.com"
-    port: 587
 
 session:
   name: "authelia_session"
   expiration: "1h"
   inactivity: "5m"
-  domain: "example.com"
+  cookies:
+    - domain: "example.com"
+      authelia_url: "https://authelia.example.com"
 
 storage:
   local:
