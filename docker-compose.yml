@@ -114,8 +114,8 @@ services:
     expose:
       - "9091"
     ports:
-      - "50500:50500"
-      - "50500:50500/udp"
+      - "42069:42069"
+      - "42069:42069/udp"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
