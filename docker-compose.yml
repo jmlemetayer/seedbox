@@ -217,10 +217,11 @@ services:
     expose:
       - "8888"
     ports:
-      - "55555:55555"
+      - "4269:4269"
     volumes:
       - "/etc/localtime:/etc/localtime:ro"
       - "/etc/timezone:/etc/timezone:ro"
+      - "./resilio/sync.conf:/defaults/sync.conf:ro"
       - "${SEEDBOX_DIR}:/downloads"
       - "${SEEDBOX_DIR}:/sync"
       - "resilio:/config"
