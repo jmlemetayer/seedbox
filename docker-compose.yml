@@ -69,10 +69,9 @@ services:
       - "/etc/timezone:/etc/timezone:ro"
     environment:
       HOME_FQDN: "${HOME_FQDN}"
-      HOME_LINKS: "radarr:sonarr:alternatrr:downloads:transmission:jackett:resilio"
+      HOME_LINKS: "radarr:sonarr:downloads:transmission:jackett:resilio"
       HOME_LINK_RADARR: "https://${RADARR_FQDN}"
       HOME_LINK_SONARR: "https://${SONARR_FQDN}"
-      HOME_LINK_ALTERNATRR: "https://${ALTERNATRR_FQDN}"
       HOME_LINK_DOWNLOADS: "https://${DOWNLOADS_FQDN}"
       HOME_LINK_TRANSMISSION: "https://${TRANSMISSION_FQDN}"
       HOME_LINK_JACKETT: "https://${JACKETT_FQDN}"
@@ -203,29 +202,6 @@ services:
       - "traefik.http.routers.sonarr.tls.certresolver=letsencrypt"
       - "traefik.http.routers.sonarr.middlewares=authelia@docker"
 
-  alternatrr:
-    image: "theultimatecoder/alternatrr"
-    restart: "unless-stopped"
-    expose:
-      - "80"
-    volumes:
-      - "/etc/localtime:/etc/localtime:ro"
-      - "/etc/timezone:/etc/timezone:ro"
-      - "sonarr:/sonarr"
-      - "alternatrr:/config"
-    environment:
-      ConnectionStrings__DefaultConnection: "Data Source=/config/alternatrr.db"
-      ConnectionStrings__sonarr: "Data Source=/sonarr/sonarr.db"
-      Login__Username: "username"
-      Login__Password: "password"
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.alternatrr.rule=Host(`${ALTERNATRR_FQDN}`)"
-      - "traefik.http.routers.alternatrr.entrypoints=websecure"
-      - "traefik.http.routers.alternatrr.tls=true"
-      - "traefik.http.routers.alternatrr.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.alternatrr.middlewares=authelia@docker"
-
   resilio:
     image: "linuxserver/resilio-sync"
     restart: "unless-stopped"
@@ -256,7 +232,6 @@ volumes:
   radarr:
   resilio:
   sonarr:
-  alternatrr:
   traefik:
   transmission:
 
