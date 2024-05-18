@@ -1,7 +1,7 @@
 services:
 
   traefik:
-    image: "traefik:2.4"
+    image: "traefik:2.11"
     restart: "unless-stopped"
     depends_on:
       - "authelia"
@@ -48,6 +48,7 @@ services:
       AUTHELIA_SESSION_SECRET_FILE: "/run/secrets/authelia_session_secret"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.authelia.loadbalancer.server.port=9091"
       - "traefik.http.routers.authelia.rule=Host(`${AUTHELIA_FQDN}`)"
       - "traefik.http.routers.authelia.entrypoints=websecure"
       - "traefik.http.routers.authelia.tls=true"
@@ -78,6 +79,7 @@ services:
       HOME_LINK_RESILIO: "https://${RESILIO_FQDN}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.home.loadbalancer.server.port=80"
       - "traefik.http.routers.home.rule=Host(`${HOME_FQDN}`)"
       - "traefik.http.routers.home.entrypoints=websecure"
       - "traefik.http.routers.home.tls=true"
@@ -97,6 +99,7 @@ services:
       THEME: "zephyr"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.downloads.loadbalancer.server.port=80"
       - "traefik.http.routers.downloads.rule=Host(`${DOWNLOADS_FQDN}`)"
       - "traefik.http.routers.downloads.entrypoints=websecure"
       - "traefik.http.routers.downloads.tls=true"
@@ -124,6 +127,7 @@ services:
       PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.transmission.loadbalancer.server.port=9091"
       - "traefik.http.routers.transmission.rule=Host(`${TRANSMISSION_FQDN}`)"
       - "traefik.http.routers.transmission.entrypoints=websecure"
       - "traefik.http.routers.transmission.tls=true"
@@ -152,6 +156,7 @@ services:
       PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.jackett.loadbalancer.server.port=9117"
       - "traefik.http.routers.jackett.rule=Host(`${JACKETT_FQDN}`)"
       - "traefik.http.routers.jackett.entrypoints=websecure"
       - "traefik.http.routers.jackett.tls=true"
@@ -174,6 +179,7 @@ services:
       PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.radarr.loadbalancer.server.port=7878"
       - "traefik.http.routers.radarr.rule=Host(`${RADARR_FQDN}`)"
       - "traefik.http.routers.radarr.entrypoints=websecure"
       - "traefik.http.routers.radarr.tls=true"
@@ -196,6 +202,7 @@ services:
       PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.sonarr.loadbalancer.server.port=8989"
       - "traefik.http.routers.sonarr.rule=Host(`${SONARR_FQDN}`)"
       - "traefik.http.routers.sonarr.entrypoints=websecure"
       - "traefik.http.routers.sonarr.tls=true"
@@ -220,6 +227,7 @@ services:
       PGID: "${SEEDBOX_GID}"
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.resilio.loadbalancer.server.port=8888"
       - "traefik.http.routers.resilio.rule=Host(`${RESILIO_FQDN}`)"
       - "traefik.http.routers.resilio.entrypoints=websecure"
       - "traefik.http.routers.resilio.tls=true"
