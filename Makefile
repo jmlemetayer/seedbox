@@ -4,7 +4,7 @@ DOCKER_COMPOSE := docker compose -p ${PROJECT}
 
 .PHONY: install
 install:
-	${DOCKER_COMPOSE} up --build --detach
+	${DOCKER_COMPOSE} up --quiet-pull --build --detach
 
 .PHONY: uninstall
 uninstall:
