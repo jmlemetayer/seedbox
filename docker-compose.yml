@@ -137,7 +137,7 @@ services:
       - "traefik.http.routers.transmission.middlewares=authelia@docker"
 
   flaresolverr:
-    image: "21hsmw/flaresolverr:nodrivertest"
+    image: "alexfozor/flaresolverr:pr-1300-experimental"
     restart: "unless-stopped"
     expose:
       - "8191"
